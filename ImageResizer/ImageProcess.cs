@@ -40,9 +40,11 @@ namespace ImageResizer
         public async Task ResizeImages(string sourcePath, string destPath, double scale)
         {
             var allFiles = FindImages(sourcePath);
+            Task[] tasks = new Task[allFiles.Count];
+            int index = 0;
             foreach (var filePath in allFiles)
             {
-                await Task.Run(() =>
+                tasks[index] = Task.Run(() =>
                 {
                     Image imgPhoto = Image.FromFile(filePath);
                     string imgName = Path.GetFileNameWithoutExtension(filePath);
@@ -60,7 +62,10 @@ namespace ImageResizer
                     string destFile = Path.Combine(destPath, imgName + ".jpg");
                     processedImage.Save(destFile, ImageFormat.Jpeg);
                 });
+                index++;
             }
+
+            await Task.WhenAll(tasks);
         }
 
         /// <summary>
