@@ -42,6 +42,7 @@ namespace ImageResizer
             var allFiles = FindImages(sourcePath);
             Task[] tasks = new Task[allFiles.Count];
             int index = 0;
+
             foreach (var filePath in allFiles)
             {
                 tasks[index] = Task.Run(() =>
